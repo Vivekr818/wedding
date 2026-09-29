@@ -611,16 +611,37 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
          */
         #main [data-framer-name="PAGE 1"] {
             --local-hero-scenery-y: 110svh;
+            --local-hero-tree-y: 110svh;
             --local-hero-tagline-y: 110svh;
+            --local-hero-title-y: 0px;
+            --local-hero-title-scale: 1;
             --local-hero-cue-opacity: 1;
             background: #078be8;
         }
-        #main [data-framer-name="PAGE 1"] [data-framer-name="TEMPLE"],
-        #main [data-framer-name="PAGE 1"] [data-framer-name="Tree"] {
+        #main [data-framer-name="PAGE 1"] [data-framer-name="TEMPLE"] {
             translate: 0 var(--local-hero-scenery-y) !important;
+        }
+        #main [data-framer-name="PAGE 1"] [data-framer-name="Tree"] {
+            translate: 0 var(--local-hero-tree-y) !important;
         }
         #main [data-framer-name="PAGE 1"] [data-framer-name="TAG LINE"] {
             translate: 0 var(--local-hero-tagline-y) !important;
+        }
+        #main [data-framer-name="PAGE 1"] :is(
+            [data-framer-name="GROOM NAME"],
+            [data-framer-name="WEDS"],
+            [data-framer-name="BRIDE NAME"]
+        ) {
+            z-index: 2 !important;
+            translate: 0 var(--local-hero-title-y) !important;
+        }
+        #main [data-framer-name="PAGE 1"] :is(
+            [data-framer-name="GROOM NAME"],
+            [data-framer-name="WEDS"],
+            [data-framer-name="BRIDE NAME"]
+        ) .framer-text {
+            scale: var(--local-hero-title-scale) !important;
+            transform-origin: center center !important;
         }
         /* Keep the cover visually pure; restore the existing audio control on scroll. */
         #main .framer-fwz7u-container {
@@ -663,6 +684,7 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
         }
         @media (max-width: 809.98px) {
             #main .framer-1v6qekl[data-framer-name="PAGE 1"] {
+                --local-hero-title-scale: 1.14;
                 height: 150svh !important;
                 min-height: 150svh !important;
                 aspect-ratio: auto !important;
@@ -1603,123 +1625,48 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
         (() => {
             "use strict";
 
+            /* One scroll transition only: sky + names first, temple scene next. */
             const pageSelector = '#main .framer-1v6qekl[data-framer-name="PAGE 1"]';
-            const scenerySelector = '[data-framer-name="TEMPLE"], [data-framer-name="Tree"]';
-            const taglineSelector = '[data-framer-name="TAG LINE"]';
-            const sceneryProperty = "--local-hero-scenery-y";
-            const taglineProperty = "--local-hero-tagline-y";
+            const sceneProperties = [
+                "--local-hero-scenery-y",
+                "--local-hero-tree-y",
+                "--local-hero-tagline-y"
+            ];
+            const titleScaleProperty = "--local-hero-title-scale";
             const cueProperty = "--local-hero-cue-opacity";
-            const entryGuard = 3;
-            const minimumReleaseDistance = 240;
-            const releaseViewportRatio = .72;
-
-            let activePage = null;
-            let sceneryStartY = 0;
-            let taglineStartY = 0;
-            let releaseDistance = minimumReleaseDistance;
-            let appliedSceneryY = 0;
-            let appliedTaglineY = 0;
-            let lastWidth = 0;
-            let lastHeight = 0;
-            let needsMeasure = true;
+            const sceneStartOffset = 110;
+            const sceneRevealDistance = .72;
+            const mobileTitleStartScale = 1;
+            const titleEndScale = .8;
 
             const clamp01 = value => Math.max(0, Math.min(1, value));
-            const smoothstep = value => value * value * (3 - 2 * value);
-            const visible = element => {
-                if (!element) return false;
-                const style = getComputedStyle(element);
-                const rect = element.getBoundingClientRect();
-                return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
-            };
-            const translateYOf = element => {
-                const value = getComputedStyle(element).translate;
-                if (!value || value === "none") return 0;
-                const parts = value.trim().split(/\s+/);
-                const candidate = Number.parseFloat(parts.length > 1 ? parts[1] : parts[0]);
-                return Number.isFinite(candidate) ? candidate : 0;
-            };
-            const writeLength = (property, value) => {
-                const rounded = Math.round(value * 100) / 100;
-                activePage.style.setProperty(property, `${rounded}px`);
-                return rounded;
-            };
-
-            const measure = () => {
-                const page = document.querySelector(pageSelector);
-                if (!page) return false;
-
-                const scenery = [...page.querySelectorAll(scenerySelector)].filter(visible);
-                const tagline = [...page.querySelectorAll(taglineSelector)].find(visible);
-                if (!scenery.length || !tagline) return false;
-
-                activePage = page;
-                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-                const currentSceneryY = translateYOf(scenery[0]);
-                const currentTaglineY = translateYOf(tagline);
-                const naturalSceneryTop = Math.min(...scenery.map(element =>
-                    element.getBoundingClientRect().top - currentSceneryY
-                ));
-                const naturalTaglineTop = tagline.getBoundingClientRect().top - currentTaglineY;
-
-                sceneryStartY = Math.max(0, viewportHeight + entryGuard - naturalSceneryTop);
-                taglineStartY = Math.max(0, viewportHeight + entryGuard - naturalTaglineTop);
-                const pageHeight = page.getBoundingClientRect().height;
-                releaseDistance = Math.max(
-                    minimumReleaseDistance,
-                    Math.min(pageHeight * .82, viewportHeight * releaseViewportRatio)
-                );
-
-                appliedSceneryY = currentSceneryY;
-                appliedTaglineY = currentTaglineY;
-                lastWidth = window.innerWidth;
-                lastHeight = viewportHeight;
-                needsMeasure = false;
-                return true;
-            };
 
             const render = () => {
-                const currentPage = document.querySelector(pageSelector);
-                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-                if (
-                    currentPage !== activePage ||
-                    window.innerWidth !== lastWidth ||
-                    viewportHeight !== lastHeight
-                ) needsMeasure = true;
-
-                if (needsMeasure && !measure()) {
+                const page = document.querySelector(pageSelector);
+                if (!page) {
                     requestAnimationFrame(render);
                     return;
                 }
 
-                const pageRect = activePage.getBoundingClientRect();
-                const scrolled = Math.max(0, -pageRect.top);
-                const progress = clamp01(scrolled / releaseDistance);
-                const eased = smoothstep(progress);
-                const sceneryY = sceneryStartY * (1 - eased);
-                const taglineY = taglineStartY * (1 - eased);
-                const cueProgress = smoothstep(clamp01(scrolled / Math.max(1, releaseDistance * .36)));
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const scrolled = Math.max(0, -page.getBoundingClientRect().top);
+                const progress = clamp01(scrolled / (viewportHeight * sceneRevealDistance));
+                const sceneOffset = sceneStartOffset * (1 - progress);
+                const titleStartScale = window.innerWidth <= 809.98 ? mobileTitleStartScale : 1;
+                const titleScale = titleStartScale + (titleEndScale - titleStartScale) * progress;
 
-                if (Math.abs(sceneryY - appliedSceneryY) > .05) {
-                    appliedSceneryY = writeLength(sceneryProperty, sceneryY);
-                }
-                if (Math.abs(taglineY - appliedTaglineY) > .05) {
-                    appliedTaglineY = writeLength(taglineProperty, taglineY);
-                }
-                activePage.style.setProperty(cueProperty, String(Math.round((1 - cueProgress) * 1000) / 1000));
+                sceneProperties.forEach(property => page.style.setProperty(property, `${sceneOffset.toFixed(2)}svh`));
+                page.style.setProperty(titleScaleProperty, titleScale.toFixed(4));
+                page.style.setProperty(cueProperty, String(1 - progress));
+
                 const main = document.getElementById("main");
                 if (main) main.toggleAttribute("data-local-hero-controls-visible", scrolled > 12);
 
                 requestAnimationFrame(render);
             };
 
-            const begin = () => {
-                needsMeasure = true;
-                requestAnimationFrame(render);
-                window.addEventListener("resize", () => { needsMeasure = true; }, { passive: true });
-            };
-
-            if (document.readyState === "complete") requestAnimationFrame(() => requestAnimationFrame(begin));
-            else window.addEventListener("load", () => requestAnimationFrame(() => requestAnimationFrame(begin)), { once: true });
+            if (document.readyState === "complete") requestAnimationFrame(render);
+            else window.addEventListener("load", () => requestAnimationFrame(render), { once: true });
         })();
     </script>
 
