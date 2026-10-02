@@ -659,6 +659,22 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
 
         .pm-opening-invitation[hidden] { display: none !important; }
 
+        .pm-opening-clip-defs {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .pm-opening-scene {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            isolation: isolate;
+            contain: layout paint style;
+        }
+
         .pm-opening-invitation-backdrop {
             position: absolute;
             inset: 0;
@@ -1130,7 +1146,6 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
         .pm-opening-invitation {
             --pm-opening-progress: 0;
             --pm-opening-text-opacity: 1;
-            --pm-opening-mask: linear-gradient(#fff, #fff);
             --pm-opening-backdrop-opacity: 1;
             --pm-opening-bg-y: 0px;
             --pm-opening-bg-scale: 1;
@@ -1389,22 +1404,27 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             opacity: 0;
         }
 
+        .pm-opening-invitation.is-opening .pm-opening-scene {
+            -webkit-clip-path: url(#pm-opening-reveal-clip);
+            clip-path: url(#pm-opening-reveal-clip);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            will-change: clip-path;
+        }
+
         .pm-opening-invitation.is-opening .pm-opening-invitation-backdrop,
         .pm-opening-invitation.is-opening .pm-opening-architecture,
         .pm-opening-invitation.is-opening .pm-opening-garlands,
         .pm-opening-invitation.is-opening .pm-opening-diya,
         .pm-opening-invitation.is-opening .pm-opening-invitation-card,
         .pm-opening-invitation.is-opening .pm-opening-floral-foreground,
-        .pm-opening-invitation.is-opening .pm-opening-soft-foreground,
-        .pm-opening-invitation.is-opening .pm-opening-mote {
-            -webkit-mask-image: var(--pm-opening-mask);
-            mask-image: var(--pm-opening-mask);
-            -webkit-mask-position: center;
-            mask-position: center;
-            -webkit-mask-size: 100% 100%;
-            mask-size: 100% 100%;
-            -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
+        .pm-opening-invitation.is-opening .pm-opening-soft-foreground {
+            backface-visibility: hidden;
+            will-change: transform, opacity;
+        }
+
+        .pm-opening-invitation.is-opening .pm-opening-ambient-petal {
+            animation-play-state: paused;
         }
 
         .pm-opening-invitation.is-opening .pm-opening-invitation-backdrop {
@@ -1511,6 +1531,15 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
 	<!-- Start of bodyStart -->
     
     <div id="pm-opening-invitation" class="pm-opening-invitation" role="dialog" aria-modal="true" aria-labelledby="pm-opening-title" aria-describedby="pm-opening-tagline">
+        <svg class="pm-opening-clip-defs" width="0" height="0" aria-hidden="true" focusable="false">
+            <defs>
+                <clipPath id="pm-opening-reveal-clip" clipPathUnits="objectBoundingBox">
+                    <path id="pm-opening-reveal-path" fill-rule="evenodd" clip-rule="evenodd" d="M0 0H1V1H0Z"/>
+                </clipPath>
+            </defs>
+        </svg>
+
+        <div class="pm-opening-scene">
         <div class="pm-opening-invitation-backdrop" aria-hidden="true"></div>
 
         <svg class="pm-opening-architecture" viewBox="0 0 540 960" preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -1682,6 +1711,7 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 </svg>
             </div>
             <button class="pm-opening-button" id="pm-open-invitation-button" type="button" disabled>Open Invitation</button>
+        </div>
         </div>
 
         <div class="pm-opening-petals" aria-hidden="true"></div>
@@ -3829,9 +3859,10 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             const openButton = document.getElementById("pm-open-invitation-button");
             const petalLayer = overlay?.querySelector(".pm-opening-petals");
             const ambientLayer = overlay?.querySelector(".pm-opening-ambient-petals");
+            const revealPath = document.getElementById("pm-opening-reveal-path");
             const main = document.getElementById("main");
 
-            if (!overlay || !openButton || !petalLayer || !ambientLayer || !main) {
+            if (!overlay || !openButton || !petalLayer || !ambientLayer || !revealPath || !main) {
                 document.documentElement.classList.remove("pm-opening-locked");
                 return;
             }
@@ -3918,46 +3949,45 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 return `M ${left} ${bottom} L ${left} ${shoulder} C ${left} ${top}, ${c1x} ${top - height * .36}, ${cx} ${top - height * .36} C ${c2x} ${top - height * .36}, ${right} ${top}, ${right} ${shoulder} L ${right} ${bottom} Z`;
             };
 
-            const buildMaskDataUri = archPath => {
-                const hole = archPath ? `<path d="${archPath}" fill="black"/>` : "";
-                const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><defs><mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100" style="mask-type:luminance"><rect width="100" height="100" fill="white"/>${hole}</mask></defs><rect width="100" height="100" fill="white" mask="url(#m)"/></svg>`;
-                return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
-            };
-
             const updateTransitionScene = (progress, elapsed) => {
-                const textOpacity = clamp(1 - elapsed / 600, 0, 1);
-                const apertureLocal = clamp((progress - .28) / .72, 0, 1);
-                const smooth = apertureLocal * apertureLocal * (3 - 2 * apertureLocal);
-                const archPath = progress < .28
+                const camera = progress * progress * (3 - 2 * progress);
+                const textOpacity = clamp(1 - elapsed / 650, 0, 1);
+                const apertureLocal = clamp((progress - .2) / .8, 0, 1);
+                const aperture = apertureLocal * apertureLocal * (3 - 2 * apertureLocal);
+                const archPath = progress < .2
                     ? null
-                    : drawArchPath(50, 54, 12 + smooth * 184, 14 + smooth * 218);
+                    : drawArchPath(.5, .54, .12 + aperture * 1.84, .14 + aperture * 2.18);
+
+                revealPath.setAttribute(
+                    "d",
+                    archPath ? `M0 0H1V1H0Z ${archPath}` : "M0 0H1V1H0Z"
+                );
 
                 overlay.style.setProperty("--pm-opening-progress", progress.toFixed(4));
                 overlay.style.setProperty("--pm-opening-text-opacity", textOpacity.toFixed(4));
-                overlay.style.setProperty("--pm-opening-mask", buildMaskDataUri(archPath));
                 overlay.style.setProperty("--pm-opening-backdrop-opacity", "1");
                 overlay.style.setProperty("--pm-opening-bg-y", "0px");
-                overlay.style.setProperty("--pm-opening-bg-scale", (1 + progress * .045).toFixed(4));
-                overlay.style.setProperty("--pm-opening-mid-opacity", (1 - progress * .12).toFixed(4));
-                overlay.style.setProperty("--pm-opening-mid-y", `${(progress * 92).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-mid-scale", (1 + progress * .34).toFixed(4));
-                overlay.style.setProperty("--pm-opening-fg-opacity", (1 - progress * .08).toFixed(4));
-                overlay.style.setProperty("--pm-opening-fg-y", `${(progress * 185).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-fg-scale", (1 + progress * .52).toFixed(4));
-                overlay.style.setProperty("--pm-opening-soft-opacity", (.3 * (1 - progress * .18)).toFixed(4));
-                overlay.style.setProperty("--pm-opening-soft-y", `${(progress * 245).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-soft-scale", (1 + progress * .88).toFixed(4));
-                overlay.style.setProperty("--pm-opening-top-opacity", (1 - progress * .14).toFixed(4));
-                overlay.style.setProperty("--pm-opening-top-y", `${(progress * 62).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-top-scale", (1 + progress * .38).toFixed(4));
-                overlay.style.setProperty("--pm-opening-diya-y", `${(progress * 105).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-diya-left-x", `${(progress * -150).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-diya-right-x", `${(progress * 150).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-diya-scale", (1 + progress * .42).toFixed(4));
-                overlay.style.setProperty("--pm-opening-content-y", `${(progress * 26).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-content-scale", (1 + progress * .12).toFixed(4));
-                overlay.style.setProperty("--pm-opening-content-blur", `${(progress * 1.5).toFixed(2)}px`);
-                overlay.style.setProperty("--pm-opening-mote-opacity", ((1 - progress) * .2).toFixed(4));
+                overlay.style.setProperty("--pm-opening-bg-scale", (1 + camera * .045).toFixed(4));
+                overlay.style.setProperty("--pm-opening-mid-opacity", (1 - camera * .12).toFixed(4));
+                overlay.style.setProperty("--pm-opening-mid-y", `${(camera * 92).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-mid-scale", (1 + camera * .34).toFixed(4));
+                overlay.style.setProperty("--pm-opening-fg-opacity", (1 - camera * .08).toFixed(4));
+                overlay.style.setProperty("--pm-opening-fg-y", `${(camera * 185).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-fg-scale", (1 + camera * .52).toFixed(4));
+                overlay.style.setProperty("--pm-opening-soft-opacity", (.3 * (1 - camera * .18)).toFixed(4));
+                overlay.style.setProperty("--pm-opening-soft-y", `${(camera * 245).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-soft-scale", (1 + camera * .88).toFixed(4));
+                overlay.style.setProperty("--pm-opening-top-opacity", (1 - camera * .14).toFixed(4));
+                overlay.style.setProperty("--pm-opening-top-y", `${(camera * 62).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-top-scale", (1 + camera * .38).toFixed(4));
+                overlay.style.setProperty("--pm-opening-diya-y", `${(camera * 105).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-diya-left-x", `${(camera * -150).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-diya-right-x", `${(camera * 150).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-diya-scale", (1 + camera * .42).toFixed(4));
+                overlay.style.setProperty("--pm-opening-content-y", `${(camera * 26).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-content-scale", (1 + camera * .12).toFixed(4));
+                overlay.style.setProperty("--pm-opening-content-blur", `${(camera * 1.5).toFixed(2)}px`);
+                overlay.style.setProperty("--pm-opening-mote-opacity", ((1 - camera) * .2).toFixed(4));
             };
 
             const buildAmbientScene = () => {
@@ -3995,7 +4025,7 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             const buildPetalTransition = () => {
                 if (reducedMotion || petalLayer.childElementCount) return;
 
-                const count = window.innerWidth < 480 ? 34 : window.innerWidth < 900 ? 42 : 52;
+                const count = window.innerWidth < 480 ? 28 : window.innerWidth < 900 ? 36 : 44;
                 const types = ["jasmine", "petal", "rose", "petal", "leaf", "jasmine", "petal"];
                 const fragment = document.createDocumentFragment();
 
