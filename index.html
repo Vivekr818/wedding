@@ -2421,12 +2421,23 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
              * glyphs sit ~11px above their own box and these box gaps are
              * intentionally smaller than the optical result.
              */
+            /*
+             * The title group drops 35px to clear the arch. Measured from rendered
+             * pixels, the arch's gold band ends around y=90..108 across the title's
+             * x-range, so "SVM" (ink from y=143) already cleared it; the element that
+             * actually overlapped was the mantra (ink y=105..116). Moving the mantra
+             * and title together therefore fixes the real collision and keeps
+             * Shubh Vivah -> SVM -> Grand tight, instead of opening a ~60px hole
+             * above SVM. The enlarged gap lands on the eyebrow, spanning the
+             * decorative arch band, where the air reads as intentional.
+             */
             #main .local-venue-mantra {
+                margin-top: 55px;
                 margin-bottom: 16px;
             }
             #main .local-venue-rule {
-                margin-top: 21px;
-                margin-bottom: 15px;
+                margin-top: 6px;
+                margin-bottom: 0;
             }
             #main .local-venue-details {
                 margin-top: 21px;
