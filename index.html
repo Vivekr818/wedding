@@ -2269,6 +2269,14 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             left: 50% !important;
         }
 
+        /* Lift the "Invite" heading 20px. Framer animates this slot's `transform`
+           inline, so the offset goes on margin-top to leave the entrance motion,
+           type and centring untouched. The slot is absolutely positioned, so
+           nothing around it moves. */
+        #main [data-framer-name="INVITE"] {
+            margin-top: -20px !important;
+        }
+
         @media (max-width: 809.98px) {
             /* Hero support copy: preserve names, improve only the tiny tagline. */
             #main [data-framer-name="PAGE 1"] [data-framer-name="TAG LINE"] .framer-text {
