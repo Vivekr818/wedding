@@ -2401,6 +2401,37 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 line-height: 1.45;
                 letter-spacing: .005em;
             }
+
+            /*
+             * Venue column vertical rhythm. The measured optical gaps ran
+             * 26 / 20 / 32 / 34 / 41 / 32 top-to-bottom, so the spacing grew as the
+             * eye travelled down and left an 82px hole between the title and the
+             * address. These margins even it out to roughly 26 / 26 / 22 / 22 / 28 / 28.
+             *
+             * The section's own padding and the mantra's top margin are deliberately
+             * left alone: the background arch is `cover` and height-bound, so its gold
+             * scalloped edge sits at a fixed fraction of the section. It currently
+             * crosses the mantra, and moving the column down pushes "Wedding Venue"
+             * onto that edge instead. So the title is lowered via the mantra's bottom
+             * margin, which leaves the eyebrow and mantra sitting on the artwork
+             * exactly as designed.
+             *
+             * Type, colour, the divider rules and the card ornament are untouched;
+             * only box spacing changes. Note the title uses line-height .93, so its
+             * glyphs sit ~11px above their own box and these box gaps are
+             * intentionally smaller than the optical result.
+             */
+            #main .local-venue-mantra {
+                margin-bottom: 16px;
+            }
+            #main .local-venue-rule {
+                margin-top: 21px;
+                margin-bottom: 15px;
+            }
+            #main .local-venue-details {
+                margin-top: 21px;
+                margin-bottom: 28px;
+            }
         }
 
         /* Tablet and compact web. */
