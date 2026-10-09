@@ -1103,6 +1103,7 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             .pm-opening-name { font-size: clamp(29px, 8.7vw, 43px); }
             .pm-opening-ampersand { min-height: 21px; font-size: 22px; }
             .pm-opening-tagline { margin-top: 6px; font-size: 13px; }
+            .pm-opening-invite-line { margin-top: 5px; font-size: 13.5px; line-height: 1.38; }
             .pm-opening-divider { height: 15px; margin: 4px auto; }
             .pm-opening-divider svg { width: 26px; height: 16px; }
             .pm-opening-button { min-height: 43px; min-width: min(220px, 70vw); padding: 10px 20px; font-size: 10px; }
@@ -1315,6 +1316,27 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             letter-spacing: .025em;
         }
 
+        /*
+         * The parents' invitation line. Placed between the tagline and the
+         * divider so it reads as part of the names group while the divider
+         * still leads into the button. Abhaya Libre is the serif already used
+         * for the invitation body copy, and the ivory is dimmed below the
+         * tagline's so PRAJINEETHA and MAHESH stay dominant. It joins the
+         * existing staggered rise, one beat after the tagline.
+         */
+        .pm-opening-invite-line {
+            max-width: min(27ch, 90%);
+            margin: clamp(11px, 1.9svh, 17px) auto 0;
+            color: rgba(245, 231, 200, .8);
+            font-family: "Lusitana", "Abhaya Libre", "Times New Roman", serif;
+            font-size: clamp(14.5px, 4vw, 17.5px);
+            line-height: 1.5;
+            letter-spacing: .01em;
+            text-align: center;
+            text-wrap: balance;
+            animation: pm-opening-content-rise .85s .34s ease-out both;
+        }
+
         .pm-opening-divider {
             width: min(205px, 58vw);
             height: 20px;
@@ -1505,6 +1527,200 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
         }
     </style>
 
+    <style id="pm-couple-title-styles">
+        /*
+         * Honorifics attached to the two gold couple names on the invitation.
+         * Both are placed so they add no height and no width to the name's own
+         * line, which is why neither name moves, changes size, or loses its
+         * centring. Sizes are in `em` so each title tracks its name if the
+         * existing display-name fitter rescales it on narrow screens.
+         */
+        /*
+         * A richer gold than the names inherit. The card behind these titles is
+         * light cream, rgb(239,235,226) measured, so a paler gold drops to about
+         * 1.03:1 and disappears. This lifts contrast from 1.47:1 to 2.24:1, which
+         * is what actually makes the small type read as brighter here.
+         */
+        #main .pm-couple-title {
+            color: #C9961F;
+            font-weight: inherit;
+        }
+
+        /*
+         * "Chi. La. Sow." cannot sit beside PRAJINEETHA: measured at 375px the
+         * name already fills 229.7 of its 233px slot, so an inline honorific
+         * would force the fitter to shrink the name by about a quarter. It goes
+         * directly above instead. Absolutely positioned, so the slot does not
+         * grow and the name stays on its original baseline.
+         */
+        #main .pm-couple-title-above {
+            position: absolute;
+            right: 0;
+            bottom: 100%;
+            left: 0;
+            /* Tracks the name, but capped: at the desktop name size .3em resolves
+               to ~40px, which collided with "Weds" above the groom's name. */
+            font-size: clamp(11px, .3em, 20px);
+            line-height: 1.15;
+            letter-spacing: .1em;
+            text-align: center;
+        }
+
+        /*
+         * Both honorifics use the stacked treatment above, so bride and groom
+         * match. "Chi." needs room above MAHESH that the original layout did
+         * not have: the measured gap between "Weds" and MAHESH was only 8-20px
+         * across phone widths. The groom's slot is therefore nudged down on
+         * mobile (see the breakpoint block) to open that space. Desktop already
+         * has ~44px there and needs no nudge.
+         *
+         * The parents' line now reads on one line, which makes it the widest
+         * line in its box, so that box's fit scale is reduced to keep it inside
+         * the temple border. Its second line is hidden because the honorifics
+         * it used to hold now live on the names.
+         */
+        #main .framer-19me4mh foreignObject p:nth-of-type(2),
+        #main .framer-1jawtcx foreignObject p:nth-of-type(2) {
+            display: none;
+        }
+
+        /*
+         * The invitation sentence below "Invite" is one sentence rather than
+         * pre-split lines, so it is allowed to wrap. The max-width is a share of
+         * the box's own viewBox, which keeps the measure at roughly the same
+         * number of characters per line as before on both breakpoints, and keeps
+         * the text well inside the ivory panel.
+         */
+        /*
+         * This box keeps Framer's `white-space: pre`, which means newlines in the
+         * copy are honoured as line breaks. The invitation sentence is therefore
+         * split with explicit newlines rather than relying on wrapping, keeping
+         * every line to roughly the same measure as the original three lines.
+         */
+
+        /* Restores breathing room between the two parent lines: the box's scale
+           was reduced to fit the joined line, which tightened its leading too. */
+        #main .framer-19me4mh foreignObject p:nth-of-type(3),
+        #main .framer-1jawtcx foreignObject p:nth-of-type(3) {
+            margin-top: 6px;
+        }
+    </style>
+
+    <style id="pm-hero-scroll-cue-styles">
+        /*
+         * Hero scroll cue. Purely decorative: pointer-events are off and the node
+         * is aria-hidden, so it cannot affect layout, focus order, or any existing
+         * interaction. It is mounted inside PAGE 1, which is overflow:clip, so it
+         * stays confined to the hero and can never appear over another section.
+         */
+        /*
+         * Built from the site's own ornament vocabulary rather than generic UI:
+         * a wine medallion carrying the double gold ring used by the venue map
+         * card, flanked by the thin gold hairlines used by the venue's divider.
+         * Palette is taken straight from the venue tokens -- wine #580b1a /
+         * #31020c, gold #d7ae62 / rgba(242,208,136,..), ivory #fff7e7.
+         */
+        .pm-hero-scroll-cue {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            transform: translateX(-50%);
+            color: #e8c87a;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity .55s ease;
+        }
+
+        /* Same hairline motif as .local-venue-rule, fading out at the ends. */
+        .pm-hero-scroll-cue-rule {
+            flex: none;
+            width: 34px;
+            height: 1px;
+            background: linear-gradient(to right, rgba(215, 174, 98, 0), currentColor);
+        }
+        .pm-hero-scroll-cue-rule:last-child {
+            background: linear-gradient(to left, rgba(215, 174, 98, 0), currentColor);
+        }
+
+        /* Wine medallion, double gold ring, as on the venue map card. */
+        .pm-hero-scroll-cue-medallion {
+            position: relative;
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border: 1px solid #D4AF55;
+            border-radius: 50%;
+            background: rgba(20, 45, 75, .65);
+            animation: pm-hero-scroll-cue-glow 2.8s ease-in-out infinite;
+        }
+
+        .pm-hero-scroll-cue-medallion svg {
+            display: block;
+            width: 24px;
+            height: auto;
+            color: #F7EEDC;
+            animation: pm-hero-scroll-cue-bounce 1.9s ease-in-out infinite;
+        }
+
+        @keyframes pm-hero-scroll-cue-bounce {
+            0%, 100% { transform: translateY(-3px); opacity: .9; }
+            50%      { transform: translateY(3px);  opacity: 1; }
+        }
+
+        /* Candle-like warmth on the gold, echoing the opening overlay's glow. */
+        /* Same timing and structure as before; only the wine ring and the warm
+           drop shadow are recoloured to suit the navy fill. */
+        @keyframes pm-hero-scroll-cue-glow {
+            0%, 100% {
+                box-shadow:
+                    inset 0 0 0 2px rgba(20, 45, 75, .6),
+                    inset 0 0 0 3px rgba(212, 175, 85, .55),
+                    0 4px 16px rgba(6, 18, 34, .45),
+                    0 0 0 0 rgba(212, 175, 85, 0);
+            }
+            50% {
+                box-shadow:
+                    inset 0 0 0 2px rgba(20, 45, 75, .6),
+                    inset 0 0 0 3px rgba(212, 175, 85, .85),
+                    0 4px 16px rgba(6, 18, 34, .45),
+                    0 0 15px 2px rgba(212, 175, 85, .32);
+            }
+        }
+
+        /* Fades out as soon as the reader starts scrolling. */
+        .pm-hero-scroll-cue.is-dismissed { opacity: 0; }
+
+        /* Stays hidden for the whole opening invitation sequence. The locked class
+           is on <html> from markup and is only removed when the overlay finishes. */
+        html.pm-opening-locked .pm-hero-scroll-cue { opacity: 0; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .pm-hero-scroll-cue-medallion svg {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+            /* Keep the ring, drop the pulse. */
+            .pm-hero-scroll-cue-medallion {
+                animation: none;
+                box-shadow:
+                    inset 0 0 0 2px rgba(20, 45, 75, .6),
+                    inset 0 0 0 3px rgba(212, 175, 85, .7),
+                    0 4px 16px rgba(6, 18, 34, .45);
+            }
+        }
+    </style>
+
 </head>
 <body>
 	<script async src="https://events.framer.com/script?v=2" data-fid="469ff0d8aa3e8add392d3fa434c56ae9c282c32a13f3b41c4c2d87ef0b9bb8de" data-no-nt></script>
@@ -1674,6 +1890,7 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 <p class="pm-opening-name">MAHESH</p>
             </div>
             <p class="pm-opening-tagline" id="pm-opening-tagline">A new chapter begins</p>
+            <p class="pm-opening-invite-line">Mamidala Venkateswar &amp; Umadevi cordially invite you to celebrate the wedding of their daughter.</p>
             <div class="pm-opening-divider" aria-hidden="true">
                 <svg viewBox="0 0 36 22" focusable="false">
                     <path d="M18 19C12.8 15.2 11.7 9.2 18 2c6.3 7.2 5.2 13.2 0 17Z"/>
@@ -1689,7 +1906,7 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
     <!-- End of bodyStart -->
 	
 	<div id="main" data-framer-hydrate-v2="{&quot;routeId&quot;:&quot;augiA20Il&quot;,&quot;localeId&quot;:&quot;default&quot;,&quot;breakpoints&quot;:[{&quot;hash&quot;:&quot;ayqnlw&quot;,&quot;mediaQuery&quot;:&quot;(min-width: 1920px)&quot;},{&quot;hash&quot;:&quot;8l4zif&quot;,&quot;mediaQuery&quot;:&quot;(min-width: 1440px) and (max-width: 1919.98px)&quot;},{&quot;hash&quot;:&quot;72rtr7&quot;,&quot;mediaQuery&quot;:&quot;(min-width: 1200px) and (max-width: 1439.98px)&quot;},{&quot;hash&quot;:&quot;1lmndnn&quot;,&quot;mediaQuery&quot;:&quot;(min-width: 810px) and (max-width: 1199.98px)&quot;},{&quot;hash&quot;:&quot;1fqmtcv&quot;,&quot;mediaQuery&quot;:&quot;(max-width: 809.98px)&quot;}]}" data-framer-ssr-released-at="2026-07-08T09:18:44.491Z" data-framer-page-optimized-at="2026-07-08T13:43:34.871Z" data-framer-generated-page><!--$--><style data-framer-html-style>html body { background: rgb(255, 255, 255); }</style><div data-framer-root class="framer-m7ulU framer-72rtr7" style="min-height:100vh;width:auto"><div class="framer-ji2yub" data-framer-name="MAIN FRAME"><div class="framer-1v6qekl" data-framer-name="PAGE 1"><div class="framer-k9a895" data-framer-name="SKY" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" width="2032" height="3072" sizes="(min-width: 1920px) calc(100vw * 1.0042), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw * 1.0042), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw * 1.0042), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 1.0042), (max-width: 809.98px) calc(100vw * 1.0042)" srcset="https://framerusercontent.com/images/xZKlIX9XaacbmAvyKmu8rqVXE.webp?scale-down-to=1024&amp;width=2032&amp;height=3072 677w,https://framerusercontent.com/images/xZKlIX9XaacbmAvyKmu8rqVXE.webp?scale-down-to=2048&amp;width=2032&amp;height=3072 1354w,https://framerusercontent.com/images/xZKlIX9XaacbmAvyKmu8rqVXE.webp?width=2032&amp;height=3072 2032w" src="https://framerusercontent.com/images/xZKlIX9XaacbmAvyKmu8rqVXE.webp?width=2032&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div><div class="ssr-variant hidden-1fqmtcv"><svg class="framer-1pwvksq" data-framer-name="WEDS" data-framer-component-type="RichTextContainer" viewBox="0 0 89 38" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7Sm9zdC1yZWd1bGFy;--framer-font-family:&quot;Jost&quot;, &quot;Jost Placeholder&quot;, sans-serif;--framer-font-size:32px;--framer-text-color:rgb(255, 235, 186)" class="framer-text">AND</p></foreignObject></svg></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><svg class="framer-1pwvksq" data-framer-name="WEDS" data-framer-component-type="RichTextContainer" viewBox="0 0 89 38" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.67)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7Sm9zdC1yZWd1bGFy;--framer-font-family:&quot;Jost&quot;, &quot;Jost Placeholder&quot;, sans-serif;--framer-font-size:32px;--framer-text-color:rgb(255, 235, 186)" class="framer-text">AND</p></foreignObject></svg></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-1jgx9kw" data-framer-name="BRIDE NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:133px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">MAHESH</span></p></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-1jgx9kw" data-framer-name="BRIDE NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:45px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">MAHESH</span></p></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-1jgx9kw" data-framer-name="BRIDE NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:100px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">MAHESH</span></p></div></div><div class="ssr-variant hidden-1fqmtcv"><div class="framer-64h8lc" data-framer-name="TAG LINE" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--framer-font-size:18px;--framer-letter-spacing:0.1em;--framer-text-alignment:center;--framer-text-color:rgb(228, 226, 184);--framer-text-transform:uppercase" class="framer-text"><span style="white-space:nowrap"><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">a</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span></span> <span style="white-space:nowrap"><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">g</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">t</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">t</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">i</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">n</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">g</span></span> <span style="white-space:nowrap"><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">m</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">a</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">i</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">d</span></span></p></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-64h8lc" data-framer-name="TAG LINE" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--framer-font-size:5px;--framer-letter-spacing:0.1em;--framer-text-alignment:center;--framer-text-color:rgb(228, 226, 184);--framer-text-transform:uppercase" class="framer-text"><span style="white-space:nowrap"><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">a</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);
-        transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span></span> <span style="white-space:nowrap"><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">g</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">t</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">t</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">i</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">n</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">g</span></span> <span style="white-space:nowrap"><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">m</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">a</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">i</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">d</span></span></p></div></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-qqlkw5" data-framer-name="GROOM NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:133px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">PRAJINEETHA</span></p></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-qqlkw5" data-framer-name="GROOM NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:45px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">PRAJINEETHA</span></p></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-qqlkw5" data-framer-name="GROOM NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:100px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">PRAJINEETHA</span></p></div></div><div class="ssr-variant"><div class="framer-zrqetc" data-framer-name="TEMPLE" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" width="2032" height="3072" sizes="(min-width: 1920px) calc(100vw * 0.7625), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw * 0.7625), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw * 0.7625), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 0.7625), (max-width: 809.98px) calc(100vw / 1.311)" srcset="https://framerusercontent.com/images/J6YiMAQTDPTAlfG2On7An1Q5lB4.webp?scale-down-to=1024&amp;width=2032&amp;height=3072 677w,https://framerusercontent.com/images/J6YiMAQTDPTAlfG2On7An1Q5lB4.webp?scale-down-to=2048&amp;width=2032&amp;height=3072 1354w,https://framerusercontent.com/images/J6YiMAQTDPTAlfG2On7An1Q5lB4.webp?width=2032&amp;height=3072 2032w" src="https://framerusercontent.com/images/J6YiMAQTDPTAlfG2On7An1Q5lB4.webp?width=2032&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div></div></div></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-1bt2sc7" data-framer-name="Tree"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" width="2032" height="3072" sizes="(min-width: 1920px) calc(100vw + 6px), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw + 6px), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw + 6px), (max-width: 809.98px) calc(100vw * 1.0074), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 1.0074)" srcset="https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?scale-down-to=1024&amp;width=2032&amp;height=3072 677w,https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?scale-down-to=2048&amp;width=2032&amp;height=3072 1354w,https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?width=2032&amp;height=3072 2032w" src="https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?width=2032&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div></div></div><div class="ssr-variant hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-1bt2sc7" data-framer-name="Tree" style="transform:translate(-50%, -50%)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" width="2032" height="3072" sizes="(min-width: 1920px) calc(100vw + 6px), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw + 6px), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw + 6px), (max-width: 809.98px) calc(100vw * 1.0074), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 1.0074)" srcset="https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?scale-down-to=1024&amp;width=2032&amp;height=3072 677w,https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?scale-down-to=2048&amp;width=2032&amp;height=3072 1354w,https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?width=2032&amp;height=3072 2032w" src="https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?width=2032&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div></div></div></div><div class="framer-djxj6a" data-framer-name="PAGE 2"><div class="framer-gj6wzl" data-framer-name="DESIGN" id="gj6wzl" style="transform:translate(-50%, -50%)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" loading="lazy" width="2048" height="3072" sizes="(min-width: 1920px) calc(100vw * 1.0017), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw * 1.0017), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw * 1.0017), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 1.0017), (max-width: 809.98px) calc(100vw * 1.0017)" srcset="https://framerusercontent.com/images/iciTJeQ6Cx2u0gNdZeuKHPf1I.webp?scale-down-to=1024&amp;width=2048&amp;height=3072 682w,https://framerusercontent.com/images/iciTJeQ6Cx2u0gNdZeuKHPf1I.webp?scale-down-to=2048&amp;width=2048&amp;height=3072 1365w,https://framerusercontent.com/images/iciTJeQ6Cx2u0gNdZeuKHPf1I.webp?width=2048&amp;height=3072 2048w" src="https://framerusercontent.com/images/iciTJeQ6Cx2u0gNdZeuKHPf1I.webp?width=2048&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div><div class="framer-uf450a" data-framer-name="Ganesh ji" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" loading="lazy" width="2500" height="2500" src="https://framerusercontent.com/images/7Jc7F5U6LjAzdX4ypVkjja74nO8.webp?scale-down-to=512&amp;width=2500&amp;height=2500" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div></div><svg class="framer-1jsww7o" data-framer-component-type="RichTextContainer" viewBox="0 0 427 52" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7RUIgR2FyYW1vbmQtNzAw;--framer-font-family:&quot;EB Garamond&quot;, &quot;EB Garamond Placeholder&quot;, serif;--framer-font-size:43px;--framer-font-weight:700;--framer-text-alignment:center;--framer-text-color:rgb(42, 134, 196)" class="framer-text">On the following event</p></foreignObject></svg><svg class="framer-1jawtcx hidden-1fqmtcv" data-framer-name="GROOM FAMILY" data-framer-component-type="RichTextContainer" viewBox="0 0 477 61" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text">Chi. La. Sow. PRAJINEETHA</strong></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text">Chi. MAHESH</p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text">Son of Sri Late Bollu Anand &amp; Aruna</strong></p></foreignObject></svg><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-wuej87" data-framer-name="MAHESH" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:133px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(233, 190, 116)" class="framer-text">MAHESH</h1></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-wuej87" data-framer-name="MAHESH" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:45px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(233, 190, 116)" class="framer-text">MAHESH</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-wuej87" data-framer-name="MAHESH" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:97px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(233, 190, 116)" class="framer-text">MAHESH</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-f0n6ls" data-framer-name="&amp;" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7QW1ldGh5c3RhLXJlZ3VsYXI=;--framer-font-family:&quot;Amethysta&quot;, &quot;Amethysta Placeholder&quot;, serif;--framer-font-size:63px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(42, 134, 196)" class="framer-text">Weds</h1></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-f0n6ls" data-framer-name="&amp;" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7QW1ldGh5c3RhLXJlZ3VsYXI=;--framer-font-family:&quot;Amethysta&quot;, &quot;Amethysta Placeholder&quot;, serif;--framer-font-size:20px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(42, 134, 196)" class="framer-text">Weds</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-f0n6ls" data-framer-name="&amp;" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7QW1ldGh5c3RhLXJlZ3VsYXI=;--framer-font-family:&quot;Amethysta&quot;, &quot;Amethysta Placeholder&quot;, serif;--framer-font-size:49px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(42, 134, 196)" class="framer-text">Weds</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-kjvwux" data-framer-name="GROOM NAME " data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:133px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(232, 190, 116)" class="framer-text">PRAJINEETHA</h1></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-kjvwux" data-framer-name="GROOM NAME " data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:45px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(232, 190, 116)" class="framer-text">PRAJINEETHA</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-kjvwux" data-framer-name="GROOM NAME " data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:97px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(232, 190, 116)" class="framer-text">PRAJINEETHA</h1></div></div><svg class="framer-qq17fj hidden-1fqmtcv" data-framer-name="GROOM FAMILY" data-framer-component-type="RichTextContainer" viewBox="0 0 608 152" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><span style="--framer-font-size:18.131763489141875px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:18.131763489141875px" class="framer-text"></span></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><span style="--framer-font-size:18.131763489141875px" class="framer-text"><strong class="framer-text"></strong></span><span style="--framer-font-size:18.131763489141875px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:18.131763489141875px" class="framer-text"></span></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:18.131763489141875px;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text"></strong></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:18.131763489141875px;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text">You and your family grace the auspicious<br>wedding ceremony of my elder daughter of<br>Mamidala Venkateshwar &amp; Umadevi</p></foreignObject></svg><svg class="framer-19me4mh hidden-72rtr7 hidden-8l4zif hidden-1lmndnn hidden-ayqnlw" data-framer-name="GROOM FAMILY" data-framer-component-type="RichTextContainer" viewBox="0 0 480 61" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.52)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-font-weight:700;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text">Chi. La. Sow. PRAJINEETHA</strong></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-font-weight:700;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text">Chi. MAHESH</p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-font-weight:700;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text">Son of Sri Late Bollu Anand &amp; Aruna</strong></p></foreignObject></svg><svg class="framer-o31tru hidden-72rtr7 hidden-8l4zif hidden-1lmndnn hidden-ayqnlw" data-framer-name="GROOM FAMILY" data-framer-component-type="RichTextContainer" viewBox="0 0 477 118" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.52)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:5.794536066513787px;--framer-font-weight:700;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><span style="--framer-font-size:14.030424892015615px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:14.030424892015615px" class="framer-text"></span></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:5.794536066513787px;--framer-font-weight:700;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><span style="--framer-font-size:14.030424892015615px" class="framer-text"><strong class="framer-text"></strong></span><span style="--framer-font-size:14.030424892015615px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:14.030424892015615px" class="framer-text"></span></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:14.030424892015615px;--framer-font-weight:700;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text"></strong></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:14.030424892015615px;--framer-font-weight:700;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text">You and your family grace the auspicious<br>wedding ceremony of my elder daughter of<br>Mamidala Venkateshwar &amp; Umadevi</p></foreignObject></svg><div class="ssr-variant hidden-1lmndnn"><div class="framer-z74mwu hidden-1fqmtcv" data-framer-name="INVITE" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7THV4dXJpb3VzIFNjcmlwdC1yZWd1bGFy;--framer-font-family:&quot;Luxurious Script&quot;, sans-serif;--framer-font-size:185px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(41, 134, 196)" class="framer-text">Invite</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-z74mwu hidden-1fqmtcv" data-framer-name="INVITE" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7THV4dXJpb3VzIFNjcmlwdC1yZWd1bGFy;--framer-font-family:&quot;Luxurious Script&quot;, sans-serif;--framer-font-size:153px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(41, 134, 196)" class="framer-text">Invite</h1></div></div><div class="framer-iyex8o hidden-72rtr7 hidden-8l4zif hidden-1lmndnn hidden-ayqnlw" data-framer-name="INVITE" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7THV4dXJpb3VzIFNjcmlwdC1yZWd1bGFy;--framer-font-family:&quot;Luxurious Script&quot;, sans-serif;--framer-font-size:70px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(41, 134, 196)" class="framer-text">Invite</h1></div><svg class="framer-1k8xm2k hidden-72rtr7 hidden-8l4zif hidden-1lmndnn hidden-ayqnlw" data-framer-name="INVITE TAG LINE" data-framer-component-type="RichTextContainer" viewBox="0 0 575.5 67" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.4)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-text-alignment:center;--framer-text-color:rgb(99, 99, 97)" class="framer-text"><span style="--framer-font-size:27.92720970537262px" class="framer-text">With the blessings of God</span><span style="--framer-font-size:27.92720970537262px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:27.92720970537262px" class="framer-text">&amp; our beloved elders, We cordially</span></p></foreignObject></svg><div class="ssr-variant hidden-1lmndnn"><svg class="framer-1byyuno hidden-1fqmtcv" data-framer-name="INVITE TAG LINE" data-framer-component-type="RichTextContainer" viewBox="0 0 577 67" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-text-alignment:center;--framer-text-color:rgb(99, 99, 97)" class="framer-text"><span style="--framer-font-size:28px" class="framer-text">With the blessings of God</span><span style="--framer-font-size:28px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:28px" class="framer-text">&amp; our beloved elders, We cordially</span></p></foreignObject></svg></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><svg class="framer-1byyuno hidden-1fqmtcv" data-framer-name="INVITE TAG LINE" data-framer-component-type="RichTextContainer" viewBox="0 0 577 67" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.62)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-text-alignment:center;--framer-text-color:rgb(99, 99, 97)" class="framer-text"><span style="--framer-font-size:28px" class="framer-text">With the blessings of God</span><span style="--framer-font-size:28px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:28px" class="framer-text">&amp; our beloved elders, We cordially</span></p></foreignObject></svg></div><svg class="framer-101gh07" data-framer-component-type="RichTextContainer" viewBox="0 0 125.44 14" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7UGhpbG9zb3BoZXItNzAw;--framer-font-family:&quot;Philosopher&quot;, &quot;Philosopher Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:700;--framer-letter-spacing:0.13em;--framer-text-color:rgb(211, 127, 165)" class="framer-text">||ॐ श्री गणेशाय नमः||</p></foreignObject></svg></div></div><div class="framer-1q8leab" data-framer-name="PAGE 3"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" loading="lazy" width="3008" height="2080" sizes="(min-width: 1920px) min(100vw, 2000px), (min-width: 1440px) and (max-width: 1919.98px) min(100vw, 2000px), (min-width: 1200px) and (max-width: 1439.98px) min(100vw, 2000px), (min-width: 810px) and (max-width: 1199.98px) min(100vw, 2000px), (max-width: 809.98px) min(100vw, 2000px)" srcset="https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?scale-down-to=512&amp;width=3008&amp;height=2080 512w,https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?scale-down-to=1024&amp;width=3008&amp;height=2080 1024w,https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?scale-down-to=2048&amp;width=3008&amp;height=2080 2048w,https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?width=3008&amp;height=2080 3008w" src="https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?width=3008&amp;height=2080" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div><!--$--><div class="framer-hofxkl-container" data-framer-name="Wedding Event Slideshow" name="Wedding Event Slideshow"><!--$--><div class="ssr-variant hidden-8l4zif"><div tabindex="0" style="position:relative;width:100%;max-width:1200px;margin:0 auto;background:rgb(82, 72, 48);border-radius:40px;box-shadow:0 12px 40px rgba(45, 28, 10, 0.2);padding:clamp(14px, 2.2vw, 28px);color:rgb(47, 36, 23);outline:none;overflow:hidden;opacity:0;transform:translateY(18px);transition:opacity 500ms ease, transform 500ms ease"><div style="position:absolute;inset:0;background-image:url(https://framerusercontent.com/images/tCmbsmXAUth2weao58tGilF28.webp?width=941&amp;height=1672);background-size:cover;background-position:center top;opacity:1;pointer-events:none"></div><div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,252,247,0.92));pointer-events:none"></div><style>
+        transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span></span> <span style="white-space:nowrap"><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">g</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">t</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">t</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">i</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">n</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">g</span></span> <span style="white-space:nowrap"><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">m</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">a</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">r</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">i</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">e</span><span style="display:inline-block;opacity:0.001;filter:blur(10px);transform:translateX(0px) translateY(20px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">d</span></span></p></div></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-qqlkw5" data-framer-name="GROOM NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:133px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">PRAJINEETHA</span></p></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-qqlkw5" data-framer-name="GROOM NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:45px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">PRAJINEETHA</span></p></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-qqlkw5" data-framer-name="GROOM NAME" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><p dir="auto" style="--font-selector:R0Y7QXN1bC1yZWd1bGFy;--framer-font-family:&quot;Asul&quot;, &quot;Asul Placeholder&quot;, serif;--framer-font-size:100px;--framer-line-height:129px;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255);--framer-text-transform:uppercase" class="framer-text"><span style="display:inline-block;opacity:0.001;filter:blur(4px);transform:translateX(0px) translateY(12px) scale(1) rotate(0deg) skewX(0deg) skewY(0deg)">PRAJINEETHA</span></p></div></div><div class="ssr-variant"><div class="framer-zrqetc" data-framer-name="TEMPLE" style="will-change:transform;opacity:1;transform:translate(-50%, -50%)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" width="2032" height="3072" sizes="(min-width: 1920px) calc(100vw * 0.7625), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw * 0.7625), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw * 0.7625), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 0.7625), (max-width: 809.98px) calc(100vw / 1.311)" srcset="https://framerusercontent.com/images/J6YiMAQTDPTAlfG2On7An1Q5lB4.webp?scale-down-to=1024&amp;width=2032&amp;height=3072 677w,https://framerusercontent.com/images/J6YiMAQTDPTAlfG2On7An1Q5lB4.webp?scale-down-to=2048&amp;width=2032&amp;height=3072 1354w,https://framerusercontent.com/images/J6YiMAQTDPTAlfG2On7An1Q5lB4.webp?width=2032&amp;height=3072 2032w" src="https://framerusercontent.com/images/J6YiMAQTDPTAlfG2On7An1Q5lB4.webp?width=2032&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div></div></div></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-1bt2sc7" data-framer-name="Tree"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" width="2032" height="3072" sizes="(min-width: 1920px) calc(100vw + 6px), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw + 6px), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw + 6px), (max-width: 809.98px) calc(100vw * 1.0074), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 1.0074)" srcset="https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?scale-down-to=1024&amp;width=2032&amp;height=3072 677w,https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?scale-down-to=2048&amp;width=2032&amp;height=3072 1354w,https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?width=2032&amp;height=3072 2032w" src="https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?width=2032&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div></div></div><div class="ssr-variant hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-1bt2sc7" data-framer-name="Tree" style="transform:translate(-50%, -50%)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" width="2032" height="3072" sizes="(min-width: 1920px) calc(100vw + 6px), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw + 6px), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw + 6px), (max-width: 809.98px) calc(100vw * 1.0074), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 1.0074)" srcset="https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?scale-down-to=1024&amp;width=2032&amp;height=3072 677w,https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?scale-down-to=2048&amp;width=2032&amp;height=3072 1354w,https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?width=2032&amp;height=3072 2032w" src="https://framerusercontent.com/images/VrdsdVM2OwyjQkw6YWOB0OowTQ.webp?width=2032&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div></div></div></div><div class="framer-djxj6a" data-framer-name="PAGE 2"><div class="framer-gj6wzl" data-framer-name="DESIGN" id="gj6wzl" style="transform:translate(-50%, -50%)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" loading="lazy" width="2048" height="3072" sizes="(min-width: 1920px) calc(100vw * 1.0017), (min-width: 1440px) and (max-width: 1919.98px) calc(100vw * 1.0017), (min-width: 1200px) and (max-width: 1439.98px) calc(100vw * 1.0017), (min-width: 810px) and (max-width: 1199.98px) calc(100vw * 1.0017), (max-width: 809.98px) calc(100vw * 1.0017)" srcset="https://framerusercontent.com/images/iciTJeQ6Cx2u0gNdZeuKHPf1I.webp?scale-down-to=1024&amp;width=2048&amp;height=3072 682w,https://framerusercontent.com/images/iciTJeQ6Cx2u0gNdZeuKHPf1I.webp?scale-down-to=2048&amp;width=2048&amp;height=3072 1365w,https://framerusercontent.com/images/iciTJeQ6Cx2u0gNdZeuKHPf1I.webp?width=2048&amp;height=3072 2048w" src="https://framerusercontent.com/images/iciTJeQ6Cx2u0gNdZeuKHPf1I.webp?width=2048&amp;height=3072" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div><div class="framer-uf450a" data-framer-name="Ganesh ji" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" loading="lazy" width="2500" height="2500" src="https://framerusercontent.com/images/7Jc7F5U6LjAzdX4ypVkjja74nO8.webp?scale-down-to=512&amp;width=2500&amp;height=2500" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div></div><svg class="framer-1jsww7o" data-framer-component-type="RichTextContainer" viewBox="0 0 427 52" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7RUIgR2FyYW1vbmQtNzAw;--framer-font-family:&quot;EB Garamond&quot;, &quot;EB Garamond Placeholder&quot;, serif;--framer-font-size:43px;--framer-font-weight:700;--framer-text-alignment:center;--framer-text-color:rgb(42, 134, 196)" class="framer-text">On the following event</p></foreignObject></svg><svg class="framer-1jawtcx hidden-1fqmtcv" data-framer-name="GROOM FAMILY" data-framer-component-type="RichTextContainer" viewBox="0 0 477 61" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text">Daughter of Mamidala Venkateshwar &amp; Umadevi</strong></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text">Mamidala Venkateshwar &amp; Umadevi</p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text">Son of Sri Late Bollu Anand &amp; Aruna</strong></p></foreignObject></svg><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-wuej87" data-framer-name="MAHESH" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:133px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(233, 190, 116)" class="framer-text"><span class="pm-couple-title pm-couple-title-above">Chi.</span>MAHESH</h1></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-wuej87" data-framer-name="MAHESH" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:45px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(233, 190, 116)" class="framer-text"><span class="pm-couple-title pm-couple-title-above">Chi.</span>MAHESH</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-wuej87" data-framer-name="MAHESH" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:97px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(233, 190, 116)" class="framer-text"><span class="pm-couple-title pm-couple-title-above">Chi.</span>MAHESH</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-f0n6ls" data-framer-name="&amp;" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7QW1ldGh5c3RhLXJlZ3VsYXI=;--framer-font-family:&quot;Amethysta&quot;, &quot;Amethysta Placeholder&quot;, serif;--framer-font-size:63px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(42, 134, 196)" class="framer-text">Weds</h1></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-f0n6ls" data-framer-name="&amp;" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7QW1ldGh5c3RhLXJlZ3VsYXI=;--framer-font-family:&quot;Amethysta&quot;, &quot;Amethysta Placeholder&quot;, serif;--framer-font-size:20px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(42, 134, 196)" class="framer-text">Weds</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-f0n6ls" data-framer-name="&amp;" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7QW1ldGh5c3RhLXJlZ3VsYXI=;--framer-font-family:&quot;Amethysta&quot;, &quot;Amethysta Placeholder&quot;, serif;--framer-font-size:49px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(42, 134, 196)" class="framer-text">Weds</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-1lmndnn"><div class="framer-kjvwux" data-framer-name="GROOM NAME " data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:133px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(232, 190, 116)" class="framer-text"><span class="pm-couple-title pm-couple-title-above">Chi. La. Sow.</span>PRAJINEETHA</h1></div></div><div class="ssr-variant hidden-1lmndnn hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-kjvwux" data-framer-name="GROOM NAME " data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:45px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(232, 190, 116)" class="framer-text"><span class="pm-couple-title pm-couple-title-above">Chi. La. Sow.</span>PRAJINEETHA</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-kjvwux" data-framer-name="GROOM NAME " data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7SnVuZ2UtcmVndWxhcg==;--framer-font-family:&quot;Junge&quot;, &quot;Junge Placeholder&quot;, serif;--framer-font-size:97px;--framer-letter-spacing:-0.16em;--framer-text-alignment:center;--framer-text-color:rgb(232, 190, 116)" class="framer-text"><span class="pm-couple-title pm-couple-title-above">Chi. La. Sow.</span>PRAJINEETHA</h1></div></div><svg class="framer-qq17fj hidden-1fqmtcv" data-framer-name="GROOM FAMILY" data-framer-component-type="RichTextContainer" viewBox="0 0 608 152" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><span style="--framer-font-size:18.131763489141875px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:18.131763489141875px" class="framer-text"></span></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><span style="--framer-font-size:18.131763489141875px" class="framer-text"><strong class="framer-text"></strong></span><span style="--framer-font-size:18.131763489141875px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:18.131763489141875px" class="framer-text"></span></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:18.131763489141875px;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text"></strong></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:18.131763489141875px;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text">You and your family grace the auspicious<br>wedding ceremony of my elder daughter of<br>Mamidala Venkateshwar &amp; Umadevi</p></foreignObject></svg><svg class="framer-19me4mh hidden-72rtr7 hidden-8l4zif hidden-1lmndnn hidden-ayqnlw" data-framer-name="GROOM FAMILY" data-framer-component-type="RichTextContainer" viewBox="0 0 480 61" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.52)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-font-weight:700;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text">Daughter of Mamidala Venkateshwar &amp; Umadevi</strong></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-font-weight:700;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text">Mamidala Venkateshwar &amp; Umadevi</p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:16.94137178673437px;--framer-font-weight:700;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text">Son of Sri Late Bollu Anand &amp; Aruna</strong></p></foreignObject></svg><svg class="framer-o31tru hidden-72rtr7 hidden-8l4zif hidden-1lmndnn hidden-ayqnlw" data-framer-name="GROOM FAMILY" data-framer-component-type="RichTextContainer" viewBox="0 0 477 118" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.52)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:5.794536066513787px;--framer-font-weight:700;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><span style="--framer-font-size:14.030424892015615px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:14.030424892015615px" class="framer-text"></span></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:5.794536066513787px;--framer-font-weight:700;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><span style="--framer-font-size:14.030424892015615px" class="framer-text"><strong class="framer-text"></strong></span><span style="--framer-font-size:14.030424892015615px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:14.030424892015615px" class="framer-text"></span></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:14.030424892015615px;--framer-font-weight:700;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text"><strong class="framer-text"></strong></p><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLTcwMA==;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:14.030424892015615px;--framer-font-weight:700;--framer-line-height:1.4em;--framer-text-alignment:center;--framer-text-color:rgb(94, 94, 92)" class="framer-text">You and your family grace the auspicious<br>wedding ceremony of my elder daughter of<br>Mamidala Venkateshwar &amp; Umadevi</p></foreignObject></svg><div class="ssr-variant hidden-1lmndnn"><div class="framer-z74mwu hidden-1fqmtcv" data-framer-name="INVITE" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7THV4dXJpb3VzIFNjcmlwdC1yZWd1bGFy;--framer-font-family:&quot;Luxurious Script&quot;, sans-serif;--framer-font-size:185px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(41, 134, 196)" class="framer-text">Invite</h1></div></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><div class="framer-z74mwu hidden-1fqmtcv" data-framer-name="INVITE" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7THV4dXJpb3VzIFNjcmlwdC1yZWd1bGFy;--framer-font-family:&quot;Luxurious Script&quot;, sans-serif;--framer-font-size:153px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(41, 134, 196)" class="framer-text">Invite</h1></div></div><div class="framer-iyex8o hidden-72rtr7 hidden-8l4zif hidden-1lmndnn hidden-ayqnlw" data-framer-name="INVITE" data-framer-component-type="RichTextContainer" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><h1 dir="auto" style="--font-selector:R0Y7THV4dXJpb3VzIFNjcmlwdC1yZWd1bGFy;--framer-font-family:&quot;Luxurious Script&quot;, sans-serif;--framer-font-size:70px;--framer-letter-spacing:-0.04em;--framer-text-alignment:center;--framer-text-color:rgb(41, 134, 196)" class="framer-text">Invite</h1></div><svg class="framer-1k8xm2k hidden-72rtr7 hidden-8l4zif hidden-1lmndnn hidden-ayqnlw" data-framer-name="INVITE TAG LINE" data-framer-component-type="RichTextContainer" viewBox="0 0 575.5 67" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.4)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-text-alignment:center;--framer-text-color:rgb(99, 99, 97)" class="framer-text"><span style="--framer-font-size:27.92720970537262px" class="framer-text">With the blessings of God</span><span style="--framer-font-size:27.92720970537262px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:27.92720970537262px" class="framer-text">&amp; our beloved elders, We cordially</span></p></foreignObject></svg><div class="ssr-variant hidden-1lmndnn"><svg class="framer-1byyuno hidden-1fqmtcv" data-framer-name="INVITE TAG LINE" data-framer-component-type="RichTextContainer" viewBox="0 0 577 67" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-text-alignment:center;--framer-text-color:rgb(99, 99, 97)" class="framer-text"><span style="--framer-font-size:28px" class="framer-text">With the blessings of God</span><span style="--framer-font-size:28px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:28px" class="framer-text">&amp; our beloved elders, We cordially</span></p></foreignObject></svg></div><div class="ssr-variant hidden-1fqmtcv hidden-ayqnlw hidden-8l4zif hidden-72rtr7"><svg class="framer-1byyuno hidden-1fqmtcv" data-framer-name="INVITE TAG LINE" data-framer-component-type="RichTextContainer" viewBox="0 0 577 67" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(0.62)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7QWJoYXlhIExpYnJlLXJlZ3VsYXI=;--framer-font-family:&quot;Abhaya Libre&quot;, &quot;Abhaya Libre Placeholder&quot;, serif;--framer-font-size:calc(var(--framer-root-font-size, 1rem) * 0.38);--framer-text-alignment:center;--framer-text-color:rgb(99, 99, 97)" class="framer-text"><span style="--framer-font-size:28px" class="framer-text">With the blessings of God</span><span style="--framer-font-size:28px" class="framer-text"><br class="framer-text"></span><span style="--framer-font-size:28px" class="framer-text">&amp; our beloved elders, We cordially</span></p></foreignObject></svg></div><svg class="framer-101gh07" data-framer-component-type="RichTextContainer" viewBox="0 0 125.44 14" style="will-change:transform;opacity:0;transform:translate(-50%, -50%) translateY(40px)"><foreignObject width="100%" height="100%" class="framer-fit-text" transform="scale(1)" style="overflow:visible;transform-origin:center center"><p dir="auto" style="--font-selector:R0Y7UGhpbG9zb3BoZXItNzAw;--framer-font-family:&quot;Philosopher&quot;, &quot;Philosopher Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:700;--framer-letter-spacing:0.13em;--framer-text-color:rgb(211, 127, 165)" class="framer-text">||ॐ श्री गणेशाय नमः||</p></foreignObject></svg></div></div><div class="framer-1q8leab" data-framer-name="PAGE 3"><div style="position:absolute;border-radius:inherit;corner-shape:inherit;top:0;right:0;bottom:0;left:0" data-framer-background-image-wrapper="true"><img decoding="async" loading="lazy" width="3008" height="2080" sizes="(min-width: 1920px) min(100vw, 2000px), (min-width: 1440px) and (max-width: 1919.98px) min(100vw, 2000px), (min-width: 1200px) and (max-width: 1439.98px) min(100vw, 2000px), (min-width: 810px) and (max-width: 1199.98px) min(100vw, 2000px), (max-width: 809.98px) min(100vw, 2000px)" srcset="https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?scale-down-to=512&amp;width=3008&amp;height=2080 512w,https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?scale-down-to=1024&amp;width=3008&amp;height=2080 1024w,https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?scale-down-to=2048&amp;width=3008&amp;height=2080 2048w,https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?width=3008&amp;height=2080 3008w" src="https://framerusercontent.com/images/D4pzTjtAOLwhyi0UPGweoWoztA.webp?width=3008&amp;height=2080" alt style="display:block;width:100%;height:100%;border-radius:inherit;corner-shape:inherit;object-position:center;object-fit:cover"></div><!--$--><div class="framer-hofxkl-container" data-framer-name="Wedding Event Slideshow" name="Wedding Event Slideshow"><!--$--><div class="ssr-variant hidden-8l4zif"><div tabindex="0" style="position:relative;width:100%;max-width:1200px;margin:0 auto;background:rgb(82, 72, 48);border-radius:40px;box-shadow:0 12px 40px rgba(45, 28, 10, 0.2);padding:clamp(14px, 2.2vw, 28px);color:rgb(47, 36, 23);outline:none;overflow:hidden;opacity:0;transform:translateY(18px);transition:opacity 500ms ease, transform 500ms ease"><div style="position:absolute;inset:0;background-image:url(https://framerusercontent.com/images/tCmbsmXAUth2weao58tGilF28.webp?width=941&amp;height=1672);background-size:cover;background-position:center top;opacity:1;pointer-events:none"></div><div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,252,247,0.92));pointer-events:none"></div><style>
                 .wedding-arrow-btn:focus-visible,.wedding-dot-btn:focus-visible,.wedding-cta-btn:focus-visible{outline:2px solid rgb(7, 95, 203);outline-offset:3px}
                 .wedding-cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,0.16)}
                 .wedding-event-grid{display:grid;grid-template-columns:minmax(260px,0.82fr) minmax(0,1fr);gap:clamp(16px,2.5vw,32px);align-items:start}
@@ -2289,13 +2506,24 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             }
 
             /* Improve fixed invitation copy by scaling type inside its existing SVG slots. */
+            /* Reduced from 1.01: "Daughter of Mamidala Venkateshwar & Umadevi" on a
+               single line is now the widest line in this box and at 1.01 it ran to
+               85% of the screen, into the leaf artwork. */
             #main .framer-19me4mh .framer-fit-text {
-                transform: scale(1.01) !important;
+                transform: scale(.83) !important;
                 transform-origin: center center !important;
             }
+            /* Reduced from 1.028: the new wording occupies four wrapped lines
+               instead of three, so it needs to be a touch smaller to stay clear
+               of "Invite" above and the couple's names below. */
             #main .framer-o31tru .framer-fit-text {
-                transform: scale(1.028) !important;
+                transform: scale(.85) !important;
                 transform-origin: center center !important;
+            }
+            /* The fourth line would otherwise run into "Chi. La. Sow.", which is
+               positioned above the bride's name slot. */
+            #main .framer-o31tru {
+                margin-top: -13px !important;
             }
             #main .framer-1k8xm2k .framer-fit-text {
                 transform: scale(.59) !important;
@@ -2319,6 +2547,10 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                block needs a tighter budget than the lines higher up the card. */
             #main .framer-19me4mh {
                 width: min(477px, 119vw) !important;
+                /* Shifts down to stay clear of MAHESH, which moved down to make
+                   room for its honorific. Uses the slack left below by dropping
+                   this box from three lines to two. */
+                margin-top: 9px !important;
             }
 
             /* The display names are fitted to their slot width by script. Those slots are
@@ -2331,6 +2563,10 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             }
             #main .framer-wuej87 {
                 width: min(1200px, 69vw) !important;
+                /* Opens room for the stacked "Chi." above MAHESH. There is spare
+                   space below the name, so this only consumes the slack that
+                   removing the duplicate honorific lines freed up. */
+                margin-top: 15px !important;
             }
             /* This slot is centred at left:51% while the arch is centred at 50%, so it
                needs a tighter budget to clear the right-hand pillar. */
@@ -2357,9 +2593,9 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
             }
 
             #main .local-venue-eyebrow {
-                font-size: 13px;
+                font-size: 16px;
                 line-height: 1.4;
-                letter-spacing: .2em;
+                letter-spacing: .22em;
             }
             #main .local-venue-mantra {
                 font-size: 15px;
@@ -2431,8 +2667,22 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
              * above SVM. The enlarged gap lands on the eyebrow, spanning the
              * decorative arch band, where the air reads as intentional.
              */
+            /*
+             * "Wedding Venue" sits on the dark arch crown, so how large and how low
+             * it can go is bounded by the arch artwork, not by taste. Measured from
+             * rendered pixels at 375px: the arch's gold outline peaks at y=38 dead
+             * centre and its scallops fall away to y~93 under the label's ends. So
+             * the label can grow and drop only until its outer letters meet those
+             * scallops -- 16px at +16px is the last step that still clears them.
+             * Going lower or larger puts the W and the final E on the gold line.
+             */
+            #main .local-venue-eyebrow {
+                margin-top: 16px;
+            }
+            /* Reduced by the same 16px, so Shubh Vivah and everything below it stay
+               exactly where they are today. */
             #main .local-venue-mantra {
-                margin-top: 55px;
+                margin-top: 35px;
                 margin-bottom: 16px;
             }
             #main .local-venue-rule {
@@ -3548,13 +3798,27 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
 
             const TITLE = "PRAJINEETHA AND MAHESH";
             const AUDIO_SRC = "assets/wedding-song.mp3";
-            const INVITE_LINE_1 = "You and your family grace the auspicious";
-            const INVITE_LINE_2 = "wedding ceremony of my elder daughter of";
-            const INVITE_LINE_3 = "Mamidala Venkateshwar & Umadevi";
+            /* The box uses `white-space: pre`, so these newlines render as line
+               breaks. Each line is kept near 40 characters, the same measure the
+               previous three lines used, so nothing needs to shrink to fit. */
+            const INVITE_LINE_1 = "With the blessings of God and our elders,";
+            const INVITE_LINE_2 = "Prajineetha & Mahesh, along with their\nfamilies, invite you to join them as they\nbegin their beautiful journey together.";
+            const INVITE_LINE_3 = "";
             /* The tag line sits in a two-line box, so balance it across both lines.
                A single long line cannot grow without touching the arch artwork. */
             const TAG_LINE_1 = "With the blessings of God";
             const TAG_LINE_2 = "& our beloved elders, We cordially";
+            /* The honorifics now live on the gold display names, so the block under
+               them carries only parentage. Line 1 is split across two of the box's
+               three lines: as one line it rendered 85% of the screen and ran into
+               the leaf artwork, and keeping three lines also leaves the box the
+               same height, so nothing below it shifts. */
+            const FAMILY_LINE_1 = "Daughter of Mamidala Venkateshwar & Umadevi";
+            const FAMILY_LINE_2 = "Mamidala Venkateshwar & Umadevi";
+            const COUPLE_TITLES = [
+                [".framer-kjvwux", "PRAJINEETHA", "Chi. La. Sow.", "above"],
+                [".framer-wuej87", "MAHESH", "Chi.", "above"]
+            ];
             const DATE = "15 November 2026";
             const TIME = "10:10 AM";
             const VENUE = "SVM Grand, Beside Nagole Metro Station, Uppal, Hyderabad";
@@ -3566,8 +3830,8 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 [/Rahul\s*&\s*KIRAN/gi, "Prajineetha & Mahesh"],
                 [/Krishna\s*&\s*Radha/gi, "Prajineetha & Mahesh"],
                 [/Krishna\s+and\s+Radha/gi, "Prajineetha and Mahesh"],
-                [/Mr\.\s*\[Bride's Grandfather Name\]\s*&\s*Mrs\.\s*\[Bride's Grandmother Name\]/gi, "Chi. La. Sow. PRAJINEETHA"],
-                [/and beloved daughter of/gi, "Chi. MAHESH"],
+                [/Mr\.\s*\[Bride's Grandfather Name\]\s*&\s*Mrs\.\s*\[Bride's Grandmother Name\]/gi, FAMILY_LINE_1],
+                [/and beloved daughter of/gi, FAMILY_LINE_2],
                 [/Mr\.\s*\[Bride's Father Name\]\s*&\s*Mrs\.\s*\[Bride's Mother Name\]/gi, "Son of Sri Late Bollu Anand & Aruna"],
                 [/Mr\.\s*\[Grandfather's Name\]\s*&\s*Mrs\.\s*\[Grandmother's Name\]/gi, INVITE_LINE_2],
                 [/Mr\.\s*\[Father's Name\]\s*&\s*Mrs\.\s*\[Mother's Name\]/gi, ""],
@@ -3580,8 +3844,8 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 [/\btogether with\b/gi, INVITE_LINE_3],
                 [/You and your family grace the auspicious wedding ceremony of my elder daughter of Mamidala Venkateshwar\s*&\s*Umadevi/gi, ""],
                 [/cordially invite you to grace the auspicious wedding ceremony of(?! my elder)/gi, ""],
-                [/Elder D\/o Mamidala Venkateshwar\s*&\s*Umadevi/gi, "Chi. MAHESH"],
-                [/Chi\.\s*La\.\s*Sow\.\s*Mamidala Prajineetha/gi, "Chi. La. Sow. PRAJINEETHA"],
+                [/Elder D\/o Mamidala Venkateshwar\s*&\s*Umadevi/gi, FAMILY_LINE_2],
+                [/Chi\.\s*La\.\s*Sow\.\s*Mamidala Prajineetha/gi, FAMILY_LINE_1],
                 [/Chi\.\s*Bollu Mahesh,\s*S\/o Late\.\s*Anand\s*&\s*Aruna/gi, "Son of Sri Late Bollu Anand & Aruna"],
                 [/TAJ HOTEL MUMBAI/gi, VENUE],
                 [/TAJ HOTEL/gi, VENUE],
@@ -3623,6 +3887,56 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 });
                 document.querySelectorAll(".framer-f0n6ls").forEach(node => {
                     setLineText(node, "h1, h2, p", /^&$/, "Weds");
+                });
+            };
+
+            /*
+             * Re-attach the honorifics if hydration replaces a name element. Only the
+             * two PAGE 2 gold slots are touched; the hero's own PRAJINEETHA / MAHESH
+             * are deliberately left bare. Guarded on the line still reading as the
+             * bare name, which makes this idempotent.
+             */
+            const enforceCoupleTitles = () => {
+                for (const [slot, name, title, mode] of COUPLE_TITLES) {
+                    for (const host of document.querySelectorAll(slot)) {
+                        for (const line of host.querySelectorAll("h1, h2, p")) {
+                            if ((line.textContent || "").trim() !== name) continue;
+                            const badge = document.createElement("span");
+                            badge.className = "pm-couple-title pm-couple-title-" + mode;
+                            if (mode === "before") {
+                                const inner = document.createElement("span");
+                                inner.textContent = title;
+                                badge.appendChild(inner);
+                            } else {
+                                badge.textContent = title;
+                            }
+                            line.textContent = "";
+                            line.appendChild(badge);
+                            line.appendChild(document.createTextNode(name));
+                        }
+                    }
+                }
+            };
+
+            /* The block under the names carries parentage only. Keeps each line's
+               existing <strong> wrapper so no font weight changes. */
+            const familyRules = [
+                [/^Chi\.\s*La\.\s*Sow\.\s*PRAJINEETHA$/i, FAMILY_LINE_1],
+                [/^Daughter of$/i, FAMILY_LINE_1],
+                [/^Chi\.\s*MAHESH$/i, FAMILY_LINE_2]
+            ];
+
+            const enforceFamilyLines = () => {
+                document.querySelectorAll(".framer-19me4mh, .framer-1jawtcx").forEach(block => {
+                    block.querySelectorAll("p").forEach(line => {
+                        const text = (line.textContent || "").trim();
+                        for (const [pattern, value] of familyRules) {
+                            if (!pattern.test(text)) continue;
+                            const target = line.querySelector("strong") || line;
+                            if ((target.textContent || "").trim() !== value) target.textContent = value;
+                            return;
+                        }
+                    });
                 });
             };
 
@@ -3910,6 +4224,10 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 enforceConjunctions();
                 syncAudioSource();
                 clean(document.body);
+                /* After clean(), so a hydration pass that restores Framer's original
+                   placeholder text lands on the final wording in the same frame. */
+                enforceCoupleTitles();
+                enforceFamilyLines();
                 fitDisplayNames();
                 fitFamilyBlocks();
                 syncCountdown();
@@ -3926,6 +4244,8 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                     }
                     enforceTitle();
                     enforceConjunctions();
+                    enforceCoupleTitles();
+                    enforceFamilyLines();
                     syncAudioSource();
                     fitDisplayNames();
                     fitFamilyBlocks();
@@ -3938,6 +4258,8 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                 window.setInterval(() => {
                     enforceTitle();
                     enforceConjunctions();
+                    enforceCoupleTitles();
+                    enforceFamilyLines();
                     syncAudioSource();
                     fixLocationLinks(document.body);
                     syncCountdown();
@@ -4479,6 +4801,92 @@ Click the link below to view our wedding invitation. We can't wait to celebrate 
                     new MutationObserver(scheduleMount).observe(main, { childList: true, subtree: true });
                 }
                 window.addEventListener("resize", scheduleMount, { passive: true });
+            };
+
+            if (document.readyState === "complete") requestAnimationFrame(() => requestAnimationFrame(begin));
+            else window.addEventListener("load", () => requestAnimationFrame(() => requestAnimationFrame(begin)), { once: true });
+        })();
+    </script>
+    <script id="pm-hero-scroll-cue-runtime">
+        (() => {
+            "use strict";
+
+            /*
+             * Mounts the hero scroll cue and keeps it mounted. Framer's hydration
+             * replaces subtrees under #main, so this follows the same pattern as
+             * the other local runtimes: look the node up, create only when absent,
+             * re-assert placement idempotently, and debounce through one rAF.
+             */
+            const cueId = "pm-hero-scroll-cue";
+            const cueClass = "pm-hero-scroll-cue";
+            const heroSelector = '#main [data-framer-name="PAGE 1"]';
+
+            /* Hysteresis, so the cue cannot flicker around the threshold. */
+            const hideAbove = 28;
+            const showBelow = 8;
+
+            let queued = false;
+            let dismissed = false;
+
+            const build = () => {
+                const cue = document.createElement("div");
+                cue.id = cueId;
+                cue.className = cueClass;
+                cue.setAttribute("aria-hidden", "true");
+                cue.innerHTML =
+                    '<span class="pm-hero-scroll-cue-rule"></span>' +
+                    '<span class="pm-hero-scroll-cue-medallion">' +
+                        '<svg viewBox="0 0 24 14" focusable="false" aria-hidden="true">' +
+                            '<path d="M2 2.4 L12 11 L22 2.4" fill="none" stroke="currentColor"' +
+                            ' stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>' +
+                        '</svg>' +
+                    '</span>' +
+                    '<span class="pm-hero-scroll-cue-rule"></span>';
+                return cue;
+            };
+
+            const sync = cue => {
+                const y = window.scrollY || document.documentElement.scrollTop || 0;
+                if (!dismissed && y > hideAbove) dismissed = true;
+                else if (dismissed && y < showBelow) dismissed = false;
+                cue.classList.toggle("is-dismissed", dismissed);
+            };
+
+            const mount = () => {
+                queued = false;
+                const hero = document.querySelector(heroSelector);
+                if (!hero) return;
+
+                /* Keep exactly one instance, and keep it inside the hero. */
+                const found = [...document.querySelectorAll("." + cueClass)];
+                const cue = found.find(node => node.parentElement === hero) || found[0] || build();
+                for (const node of found) {
+                    if (node !== cue) node.remove();
+                }
+                if (cue.parentElement !== hero) hero.appendChild(cue);
+                if (cue.id !== cueId) cue.id = cueId;
+                sync(cue);
+            };
+
+            const onScroll = () => {
+                const cue = document.getElementById(cueId);
+                if (cue) sync(cue);
+            };
+
+            const schedule = () => {
+                if (queued) return;
+                queued = true;
+                requestAnimationFrame(mount);
+            };
+
+            const begin = () => {
+                mount();
+                const main = document.getElementById("main");
+                if (main) {
+                    new MutationObserver(schedule).observe(main, { childList: true, subtree: true });
+                }
+                window.addEventListener("scroll", onScroll, { passive: true });
+                window.addEventListener("resize", schedule, { passive: true });
             };
 
             if (document.readyState === "complete") requestAnimationFrame(() => requestAnimationFrame(begin));
